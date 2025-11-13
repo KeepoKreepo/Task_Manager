@@ -19,4 +19,7 @@ public class TaskService {
     public boolean updateDetails(long id, String title, String description) throws SQLException {
         return taskDao.updateDetails(id, title, description);
     }
+    public boolean delete(long id) throws SQLException {
+        return taskDao.delete(id);
+    }
 }

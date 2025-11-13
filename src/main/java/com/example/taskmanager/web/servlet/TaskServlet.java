@@ -10,7 +10,11 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 
 @WebServlet(urlPatterns = {
-        "/tasks/new"
+        "/tasks/new",
+        "/tasks/update-status",
+        "/tasks/update-details",
+        "/tasks/delete",
+
 })
 public class TaskServlet extends HttpServlet {
 
@@ -45,6 +49,9 @@ public class TaskServlet extends HttpServlet {
         try {
             switch (path) {
                 case "/tasks/new" -> createTask(req, resp);
+                case "/tasks/update-status" -> updateStatus(req, resp);
+                case "/tasks/update-details" -> updateDetails(req, resp);
+                case "/tasks/delete" -> deleteTask(req, resp);
                 default -> resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (Exception e) {
@@ -86,6 +93,12 @@ public class TaskServlet extends HttpServlet {
         String title = req.getParameter("title");
         String description = req.getParameter("description");
         taskService.updateDetails(id, title, description);
+        resp.sendRedirect(req.getContextPath() + "/dashboard");
+    }
+    private void deleteTask(HttpServletRequest req, HttpServletResponse resp)
+            throws Exception {
+        long id = Long.parseLong(req.getParameter("taskId"));
+        taskService.delete(id);
         resp.sendRedirect(req.getContextPath() + "/dashboard");
     }
 }
