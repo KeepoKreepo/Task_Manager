@@ -12,4 +12,11 @@ public class TaskService {
     public boolean addTask(Task task) throws SQLException {
         return taskDao.insert(task);
     }
+    public boolean updateStatus(long id, String status) throws SQLException {
+        return taskDao.updateStatus(id, status);
+    }
+
+    public boolean updateDetails(long id, String title, String description) throws SQLException {
+        return taskDao.updateDetails(id, title, description);
+    }
 }
