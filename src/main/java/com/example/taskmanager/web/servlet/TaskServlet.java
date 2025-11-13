@@ -2,7 +2,6 @@ package com.example.taskmanager.web.servlet;
 
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.service.TaskService;
-import com.example.taskmanager.service.AuthService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -14,7 +13,9 @@ import java.io.IOException;
         "/tasks/update-status",
         "/tasks/update-details",
         "/tasks/delete",
-
+        "/tasks/assign",
+        "/tasks/update-priority",
+        "/tasks/update-project"
 })
 public class TaskServlet extends HttpServlet {
 
@@ -22,21 +23,20 @@ public class TaskServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+            throws IOException {
 
-        String path = req.getServletPath();
-
-        if ("/tasks/new".equals(path)) {
+        if ("/tasks/new".equals(req.getServletPath())) {
             try {
-                AuthService authService = new AuthService();
-                req.setAttribute("users", authService.getAllUsers());
+                // Load users for assignment dropdown
+                com.example.taskmanager.service.AuthService auth = new com.example.taskmanager.service.AuthService();
+                req.setAttribute("users", auth.getAllUsers());
+
                 req.getRequestDispatcher("/WEB-INF/jsp/new-task.jsp").forward(req, resp);
             } catch (Exception e) {
-                e.printStackTrace();
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error loading form");
+                resp.sendError(500, "Error loading form");
             }
         } else {
-            resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+            resp.sendError(405);
         }
     }
 
@@ -52,16 +52,20 @@ public class TaskServlet extends HttpServlet {
                 case "/tasks/update-status" -> updateStatus(req, resp);
                 case "/tasks/update-details" -> updateDetails(req, resp);
                 case "/tasks/delete" -> deleteTask(req, resp);
-                default -> resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                case "/tasks/assign" -> updateAssignment(req, resp);
+                case "/tasks/update-priority" -> updatePriority(req, resp);
+                case "/tasks/update-project" -> updateProject(req, resp);
+                default -> resp.sendError(404);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error: " + e.getMessage());
+            resp.sendError(500, "Error: " + e.getMessage());
         }
     }
 
     private void createTask(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
+
         HttpSession session = req.getSession();
         Long userId = (Long) session.getAttribute("userId");
 
@@ -71,34 +75,69 @@ public class TaskServlet extends HttpServlet {
         task.setStatus("OPEN");
         task.setUserId(userId);
 
+        // Assignment
         String assignedStr = req.getParameter("assignedTo");
-        if (assignedStr != null && !assignedStr.isEmpty()) {
-            task.setAssignedTo(Long.parseLong(assignedStr));
-        }
+        task.setAssignedTo((assignedStr == null || assignedStr.isBlank()) ? null : Long.parseLong(assignedStr));
+
+        // NEW priority + project
+        task.setPriority(req.getParameter("priority"));
+        task.setProject(req.getParameter("project"));
 
         taskService.addTask(task);
         resp.sendRedirect(req.getContextPath() + "/dashboard");
     }
+
     private void updateStatus(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
-        long id = Long.parseLong(req.getParameter("taskId"));
-        String status = req.getParameter("status");
-        taskService.updateStatus(id, status);
+        taskService.updateStatus(
+                Long.parseLong(req.getParameter("id")),
+                req.getParameter("status")
+        );
         resp.sendRedirect(req.getContextPath() + "/dashboard");
     }
 
     private void updateDetails(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
-        long id = Long.parseLong(req.getParameter("taskId"));
-        String title = req.getParameter("title");
-        String description = req.getParameter("description");
-        taskService.updateDetails(id, title, description);
+        taskService.updateDetails(
+                Long.parseLong(req.getParameter("id")),
+                req.getParameter("title"),
+                req.getParameter("description")
+        );
         resp.sendRedirect(req.getContextPath() + "/dashboard");
     }
+
     private void deleteTask(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
-        long id = Long.parseLong(req.getParameter("taskId"));
-        taskService.delete(id);
+        taskService.delete(Long.parseLong(req.getParameter("id")));
+        resp.sendRedirect(req.getContextPath() + "/dashboard");
+    }
+
+    private void updateAssignment(HttpServletRequest req, HttpServletResponse resp)
+            throws Exception {
+        String assignedStr = req.getParameter("assignedTo");
+        Long assigned = (assignedStr == null || assignedStr.isBlank())
+                ? null
+                : Long.parseLong(assignedStr);
+
+        taskService.updateAssignment(Long.parseLong(req.getParameter("id")), assigned);
+        resp.sendRedirect(req.getContextPath() + "/dashboard");
+    }
+
+    private void updatePriority(HttpServletRequest req, HttpServletResponse resp)
+            throws Exception {
+        taskService.updatePriority(
+                Long.parseLong(req.getParameter("id")),
+                req.getParameter("priority")
+        );
+        resp.sendRedirect(req.getContextPath() + "/dashboard");
+    }
+
+    private void updateProject(HttpServletRequest req, HttpServletResponse resp)
+            throws Exception {
+        taskService.updateProject(
+                Long.parseLong(req.getParameter("id")),
+                req.getParameter("project")
+        );
         resp.sendRedirect(req.getContextPath() + "/dashboard");
     }
 }
