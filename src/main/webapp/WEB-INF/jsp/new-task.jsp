@@ -4,8 +4,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Create Task</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Register</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://rsms.me/inter/inter.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+            font-family: 'Inter', sans-serif;
+        }
+        .card-modern {
+            border-radius: 18px;
+            padding: 28px;
+            background: white;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+        }
+        .brand-title {
+            font-weight: 700;
+            font-size: 30px;
+        }
+        .subtitle {
+            color: #5a5f75;
+        }
+    </style>
 </head>
 
 <body class="bg-light">

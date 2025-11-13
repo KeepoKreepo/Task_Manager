@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class AuthService {
+
     private final UserDao userDao = new UserDao();
 
     public User login(String email, String password) throws SQLException {
@@ -25,16 +26,10 @@ public class AuthService {
         userDao.insert(user);
     }
 
-    /**
-     * Get all users (for assigning tasks)
-     */
     public static List<User> getAllUsers() throws SQLException {
         return UserDao.findAll();
     }
 
-    /**
-     * Get user by ID
-     */
     public User getUserById(long id) throws SQLException {
         return userDao.findById(id);
     }

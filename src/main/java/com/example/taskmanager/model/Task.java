@@ -9,7 +9,7 @@ public class Task {
     private long userId;
     private Long assignedTo;
 
-    private String priority;
+    private String priority;   // NEW
     private String project;    // NEW
 
     private String creatorName;
