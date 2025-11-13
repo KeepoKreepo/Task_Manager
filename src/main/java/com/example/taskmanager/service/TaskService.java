@@ -22,6 +22,11 @@ public class TaskService {
     public boolean delete(long id) throws SQLException {
         return taskDao.delete(id);
     }
+
+    public boolean updatePriority(long id, String priority) throws SQLException {
+        return taskDao.updatePriority(id, priority);
+    }
+
     public boolean updateProject(long id, String project) throws SQLException {
         return taskDao.updateProject(id, project);
     }
