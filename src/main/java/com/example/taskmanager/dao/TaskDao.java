@@ -11,7 +11,7 @@ public class TaskDao {
 
     public boolean insert(Task task) throws SQLException {
             String sql = """
-            INSERT INTO tasks (title, description, status, user_id, assigned_to, project)
+            INSERT INTO tasks (title, description, status, user_id, assigned_to,priority, project)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """;
 
@@ -28,6 +28,7 @@ public class TaskDao {
                 else
                     stmt.setNull(5, Types.BIGINT);
 
+                stmt.setString(6, task.getPriority());
                 stmt.setString(7, task.getProject());
 
                 return stmt.executeUpdate() > 0;
@@ -54,6 +55,15 @@ public class TaskDao {
         }
     }
 
+    public boolean updatePriority(long id, String priority) throws SQLException {
+        String sql = "UPDATE tasks SET priority = ? WHERE id = ?";
+        try (Connection conn = DB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, priority);
+            stmt.setLong(2, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
     public boolean updateProject(long id, String project) throws SQLException {
         String sql = "UPDATE tasks SET project = ? WHERE id = ?";
         try (Connection conn = DB.getConnection();
@@ -105,8 +115,10 @@ public class TaskDao {
                 t.setAssignedTo(rs.getObject("assigned_to") != null ? rs.getLong("assigned_to") : null);
                 t.setCreatorName(rs.getString("creator_name"));
                 t.setAssignedToName(rs.getString("assigned_to_name"));
-                t.setProject(rs.getString("project"));
 
+                // NEW
+                t.setPriority(rs.getString("priority"));
+                t.setProject(rs.getString("project"));
 
                 tasks.add(t);
             }

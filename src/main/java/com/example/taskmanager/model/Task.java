@@ -9,6 +9,7 @@ public class Task {
     private long userId;
     private Long assignedTo;
 
+    private String priority;
     private String project;    // NEW
 
     private String creatorName;
@@ -31,6 +32,9 @@ public class Task {
 
     public Long getAssignedTo() { return assignedTo; }
     public void setAssignedTo(Long assignedTo) { this.assignedTo = assignedTo; }
+
+    public String getPriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
 
     public String getProject() { return project; }
     public void setProject(String project) { this.project = project; }

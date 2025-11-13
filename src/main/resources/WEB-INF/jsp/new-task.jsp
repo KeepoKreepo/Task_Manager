@@ -29,6 +29,16 @@
                 <textarea name="description" class="form-control" rows="3"></textarea>
             </div>
 
+            <!-- Priority -->
+            <div class="mb-3">
+                <label class="form-label">Priority</label>
+                <select name="priority" class="form-select">
+                    <option value="LOW">LOW</option>
+                    <option value="MEDIUM" selected>MEDIUM</option>
+                    <option value="HIGH">HIGH</option>
+                </select>
+            </div>
+
             <!-- Project -->
             <div class="mb-3">
                 <label class="form-label">Project</label>
