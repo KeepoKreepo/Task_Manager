@@ -137,6 +137,18 @@
                             </form>
                         </td>
 
+                        <!-- PRIORITY -->
+                        <td>
+                            <form action="${pageContext.request.contextPath}/tasks/update-priority" method="post">
+                                <input type="hidden" name="id" value="${t.id}">
+                                <select class="form-select modern-select" name="priority" onchange="this.form.submit()">
+                                    <option value="LOW"    ${t.priority=='LOW' ? 'selected':''}>LOW</option>
+                                    <option value="MEDIUM" ${t.priority=='MEDIUM' ? 'selected':''}>MEDIUM</option>
+                                    <option value="HIGH"   ${t.priority=='HIGH' ? 'selected':''}>HIGH</option>
+                                </select>
+                            </form>
+                        </td>
+
                         <!-- PROJECT — DISPLAY ONLY -->
                         <td>
             <span class="badge bg-secondary rounded-pill px-3 py-2">
