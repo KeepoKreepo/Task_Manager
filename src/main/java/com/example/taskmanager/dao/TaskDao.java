@@ -28,4 +28,23 @@ public class TaskDao {
             return stmt.executeUpdate() > 0;
         }
     }
+    public boolean updateStatus(long id, String status) throws SQLException {
+        String sql = "UPDATE tasks SET status = ? WHERE id = ?";
+        try (Connection conn = DB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setLong(2, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+    public boolean updateDetails(long id, String title, String description) throws SQLException {
+        String sql = "UPDATE tasks SET title = ?, description = ? WHERE id = ?";
+        try (Connection conn = DB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, title);
+            stmt.setString(2, description);
+            stmt.setLong(3, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

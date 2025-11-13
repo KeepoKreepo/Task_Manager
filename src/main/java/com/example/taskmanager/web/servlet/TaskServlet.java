@@ -72,4 +72,20 @@ public class TaskServlet extends HttpServlet {
         taskService.addTask(task);
         resp.sendRedirect(req.getContextPath() + "/dashboard");
     }
+    private void updateStatus(HttpServletRequest req, HttpServletResponse resp)
+            throws Exception {
+        long id = Long.parseLong(req.getParameter("taskId"));
+        String status = req.getParameter("status");
+        taskService.updateStatus(id, status);
+        resp.sendRedirect(req.getContextPath() + "/dashboard");
+    }
+
+    private void updateDetails(HttpServletRequest req, HttpServletResponse resp)
+            throws Exception {
+        long id = Long.parseLong(req.getParameter("taskId"));
+        String title = req.getParameter("title");
+        String description = req.getParameter("description");
+        taskService.updateDetails(id, title, description);
+        resp.sendRedirect(req.getContextPath() + "/dashboard");
+    }
 }

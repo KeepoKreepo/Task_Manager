@@ -44,13 +44,37 @@
                 <tr>
                     <!-- Task Title (editable) -->
                     <td>
+                        <form action="${pageContext.request.contextPath}/tasks/update-details" method="post" style="display:flex; gap:5px;">
                             <input type="hidden" name="taskId" value="${t.id}" />
                             <input type="text" name="title" value="${t.title}" class="form-control" style="width:150px;" />
+                        </form>
                     </td>
 
                     <!-- Task Description (editable) -->
                     <td>
                         <input type="text" name="description" value="${t.description}" class="form-control" style="width:200px;" />
+                    </td>
+                    <!-- Status Dropdown -->
+                    <td>
+                        <form action="${pageContext.request.contextPath}/tasks/update-status" method="post">
+                            <input type="hidden" name="taskId" value="${t.id}">
+                            <select name="status" onchange="this.form.submit()" class="form-select form-select-sm">
+                                <option value="OPEN" ${t.status == 'OPEN' ? 'selected' : ''}>Open</option>
+                                <option value="IN_PROGRESS" ${t.status == 'IN_PROGRESS' ? 'selected' : ''}>In Progress</option>
+                                <option value="DONE" ${t.status == 'DONE' ? 'selected' : ''}>Done</option>
+                            </select>
+                        </form>
+                    </td>
+
+                    <!-- Edit and Delete -->
+                    <td>
+                        <button type="submit" class="btn btn-primary btn-sm">💾 Save</button>
+                        </form>
+
+                        <form action="${pageContext.request.contextPath}/tasks/delete" method="post" style="display:inline;">
+                            <input type="hidden" name="taskId" value="${t.id}">
+                            <button type="submit" class="btn btn-danger btn-sm">🗑 Delete</button>
+                        </form>
                     </td>
                 </tr>
             </c:forEach>
