@@ -10,24 +10,31 @@ import java.util.List;
 public class TaskDao {
 
     public boolean insert(Task task) throws SQLException {
-        String sql = "INSERT INTO tasks (title, description, status, user_id, assigned_to) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            String sql = """
+            INSERT INTO tasks (title, description, status, user_id, assigned_to, project)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """;
 
-            stmt.setString(1, task.getTitle());
-            stmt.setString(2, task.getDescription());
-            stmt.setString(3, task.getStatus());
-            stmt.setLong(4, task.getUserId());
+            try (Connection conn = DB.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            if (task.getAssignedTo() != null)
-                stmt.setLong(5, task.getAssignedTo());
-            else
-                stmt.setNull(5, Types.BIGINT);
+                stmt.setString(1, task.getTitle());
+                stmt.setString(2, task.getDescription());
+                stmt.setString(3, task.getStatus());
+                stmt.setLong(4, task.getUserId());
 
-            return stmt.executeUpdate() > 0;
+                if (task.getAssignedTo() != null)
+                    stmt.setLong(5, task.getAssignedTo());
+                else
+                    stmt.setNull(5, Types.BIGINT);
+
+                stmt.setString(7, task.getProject());
+
+                return stmt.executeUpdate() > 0;
+            }
         }
-    }
-    public boolean updateStatus(long id, String status) throws SQLException {
+
+        public boolean updateStatus(long id, String status) throws SQLException {
         String sql = "UPDATE tasks SET status = ? WHERE id = ?";
         try (Connection conn = DB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
