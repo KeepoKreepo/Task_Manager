@@ -2,7 +2,6 @@ package com.example.taskmanager.web.servlet;
 
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.service.TaskService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 

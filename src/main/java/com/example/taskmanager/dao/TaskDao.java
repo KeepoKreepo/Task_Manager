@@ -10,32 +10,31 @@ import java.util.List;
 public class TaskDao {
 
     public boolean insert(Task task) throws SQLException {
-            String sql = """
-            INSERT INTO tasks (title, description, status, user_id, assigned_to,priority, project)
+        String sql = """
+            INSERT INTO tasks (title, description, status, user_id, assigned_to, priority, project)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """;
 
-            try (Connection conn = DB.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-                stmt.setString(1, task.getTitle());
-                stmt.setString(2, task.getDescription());
-                stmt.setString(3, task.getStatus());
-                stmt.setLong(4, task.getUserId());
+            stmt.setString(1, task.getTitle());
+            stmt.setString(2, task.getDescription());
+            stmt.setString(3, task.getStatus());
+            stmt.setLong(4, task.getUserId());
 
-                if (task.getAssignedTo() != null)
-                    stmt.setLong(5, task.getAssignedTo());
-                else
-                    stmt.setNull(5, Types.BIGINT);
+            if (task.getAssignedTo() != null)
+                stmt.setLong(5, task.getAssignedTo());
+            else
+                stmt.setNull(5, Types.BIGINT);
 
-                stmt.setString(6, task.getPriority());
-                stmt.setString(7, task.getProject());
+            stmt.setString(6, task.getPriority());
+            stmt.setString(7, task.getProject());
 
-                return stmt.executeUpdate() > 0;
-            }
+            return stmt.executeUpdate() > 0;
         }
-
-        public boolean updateStatus(long id, String status) throws SQLException {
+    }
+    public boolean updateStatus(long id, String status) throws SQLException {
         String sql = "UPDATE tasks SET status = ? WHERE id = ?";
         try (Connection conn = DB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -54,7 +53,19 @@ public class TaskDao {
             return stmt.executeUpdate() > 0;
         }
     }
+    public boolean updateAssignment(long id, Long assignedTo) throws SQLException {
+        String sql = "UPDATE tasks SET assigned_to = ? WHERE id = ?";
+        try (Connection conn = DB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            if (assignedTo != null)
+                stmt.setLong(1, assignedTo);
+            else
+                stmt.setNull(1, Types.BIGINT);
 
+            stmt.setLong(2, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
     public boolean updatePriority(long id, String priority) throws SQLException {
         String sql = "UPDATE tasks SET priority = ? WHERE id = ?";
         try (Connection conn = DB.getConnection();

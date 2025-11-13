@@ -7,11 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class UserDao {
 
-    /**
-     * Find a user by email (used for login)
-     */
     public User findByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = DB.getConnection();
@@ -25,9 +23,6 @@ public class UserDao {
         return null;
     }
 
-    /**
-     * Find a user by ID (for assignment display)
-     */
     public User findById(long id) throws SQLException {
         String sql = "SELECT * FROM users WHERE id = ?";
         try (Connection conn = DB.getConnection();
@@ -41,9 +36,6 @@ public class UserDao {
         return null;
     }
 
-    /**
-     * Get all users (for task assignment dropdown)
-     */
     public static List<User> findAll() throws SQLException {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users ORDER BY name ASC";
@@ -57,9 +49,6 @@ public class UserDao {
         return users;
     }
 
-    /**
-     * Create new user (for registration)
-     */
     public void insert(User user) throws SQLException {
         String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
         try (Connection conn = DB.getConnection();
@@ -71,9 +60,6 @@ public class UserDao {
         }
     }
 
-    /**
-     * Reusable mapper for ResultSet → User object
-     */
     private static User mapRow(ResultSet rs) throws SQLException {
         User u = new User();
         u.setId(rs.getLong("id"));
