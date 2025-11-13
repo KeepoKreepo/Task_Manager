@@ -45,6 +45,15 @@ public class TaskDao {
             stmt.setString(2, description);
             stmt.setLong(3, id);
             return stmt.executeUpdate() > 0;
+
+            public boolean delete(long id) throws SQLException {
+                String sql = "DELETE FROM tasks WHERE id = ?";
+                try (Connection conn = DB.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setLong(1, id);
+                    return stmt.executeUpdate() > 0;
+                }
+            }
         }
     }
 }
